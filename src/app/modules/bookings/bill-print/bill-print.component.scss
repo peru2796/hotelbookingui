@@ -1,67 +1,126 @@
+$accent: #1a3c5e;
+$accent-light: #e8f0f8;
+$border: #c0c0c0;
+$text: #222;
+$label-color: #444;
+
 .bill-container {
-    font-family: Arial;
-    width: 210mm; /* A4 width */
-    margin: 0 auto;
+    font-family: Arial, sans-serif;
+    width: 190mm;
+    margin: 20px auto 0 auto;
     background-color: #fff;
-    padding: 0 20px;
+    padding: 0;
+    border: 1px solid $border;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+/* Top accent bar */
+.header-accent-bar {
+    background: $accent;
+    height: 6px;
+    width: 100%;
+}
+
+/* Footer accent bar */
+.footer-accent-bar {
+    background: $accent;
+    height: 4px;
+    width: 100%;
+    margin-top: 16px;
 }
 
 .bill-header {
     display: flex;
     justify-content: space-between;
+    align-items: flex-start;
+    padding: 12px 16px 8px 16px;
+
     p {
-        font-size: 12px;
-        margin: 0;
-    }
-}
-.right {
-    text-align: end;
-}
-.cash-bill {
-    margin: 0;
-    background: #e32913;
-    color: #fff;
-    padding: 5px 5px;
-    display: inline-block;
-    border-radius: 4px;
-    font-size: 14px;
-    font-weight: 700;
-}
-.title {
-    text-align: center;
-    margin-top: -45px;
-    h2 {
-        color: #e32913;
-        font-size: 24px;
-        font-weight: 500;
-        margin: 0;
-    }
-    h3 {
-        font-size: 19px;
-        font-weight: 500;
-        color: #4d4949;
-        margin: 0;
-    }
-    p {
-        font-size: 12px;
-        margin: 0;
+        font-size: 11.5px;
+        margin: 2px 0;
+        color: $label-color;
     }
 }
 
+.right {
+    text-align: right;
+}
+
+.cash-bill {
+    display: inline-block;
+    background: $accent;
+    color: #fff;
+    padding: 4px 12px;
+    border-radius: 3px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.jurisdiction {
+    margin-top: 6px !important;
+    font-size: 11px !important;
+    line-height: 16px;
+    color: #666 !important;
+}
+
+.title {
+    text-align: center;
+    flex: 1;
+    padding: 0 10px;
+
+    h2 {
+        color: $accent;
+        font-size: 22px;
+        font-weight: 700;
+        margin: 0 0 2px 0;
+        letter-spacing: 0.5px;
+    }
+    h3 {
+        font-size: 15px;
+        font-weight: 500;
+        color: #555;
+        margin: 0 0 4px 0;
+    }
+    p {
+        font-size: 11.5px;
+        margin: 0;
+        color: $label-color;
+    }
+}
+
+/* Divider with double-line effect */
+.header-divider {
+    padding: 0 16px;
+}
+.divider-line {
+    border-top: 2px solid $accent;
+    border-bottom: 1px solid lighten($accent, 40%);
+    height: 4px;
+}
+
+/* Info rows section */
 .bill-info-rows {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    padding: 6px 16px 4px 16px;
 }
 
 .info-row {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
-    gap: 12px;
+    align-items: center;
+    padding: 5px 6px;
+    border-radius: 3px;
+
     p {
         margin: 0;
-        font-size: 13px;
+        font-size: 12.5px;
+        color: $text;
+    }
+
+    &.shaded {
+        background-color: $accent-light;
     }
 }
 
@@ -70,64 +129,144 @@
 }
 
 .info-row .right {
-    // width: 150px;
+    text-align: right;
+    white-space: nowrap;
+}
+
+.label {
+    font-weight: 600;
+    color: $accent;
+}
+
+/* Main bill table */
+.bill-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0 0 0;
+}
+
+.bill-table th,
+.bill-table td {
+    border: 1px solid $border;
+    padding: 7px 10px;
     text-align: left;
-    // flex: 0 0 150px;
 }
 
-.bill-info-1 {
-    display: flex;
-    justify-content: space-between;
-    gap: 12px;
-    p {
-        margin: 0;
-        font-size: 13px;
-    }
+.bill-table th {
+    background-color: $accent;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
 }
 
-.totals {
+.bill-table td {
+    font-size: 12.5px;
+    color: $text;
+}
+
+.bill-table .alt-row td {
+    background-color: #f7f9fc;
+}
+
+.amount-col {
+    text-align: right !important;
+    width: 130px;
+}
+
+.right-align {
     text-align: right;
 }
 
-.words {
-    border: 1px solid #000;
-    padding: 5px;
-    margin-top: 10px;
+/* Totals table */
+.totals-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0;
 }
 
+.totals-label-cell {
+    border: 1px solid $border;
+    border-top: none;
+    padding: 8px 10px;
+    width: 33.33%;
+    vertical-align: top;
+
+    span {
+        display: block;
+    }
+}
+
+.totals-label {
+    font-size: 11px;
+    color: #666;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+}
+
+.totals-value {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: $text;
+}
+
+.total-highlight {
+    background-color: $accent;
+}
+
+.total-highlight .totals-label {
+    color: rgba(255,255,255,0.8);
+}
+
+.total-amount {
+    color: #fff !important;
+    font-size: 15px !important;
+    font-weight: 700 !important;
+}
+
+/* Amount in words */
+.words {
+    border: 1px solid $border;
+    border-top: none;
+    padding: 7px 10px;
+    margin: 0;
+    font-size: 12.5px;
+    background: #fafafa;
+}
+
+/* Footer */
 .footer {
     display: flex;
     justify-content: space-between;
-    margin-top: 20px;
+    margin: 14px 16px 4px 16px;
+    font-size: 12px;
+    color: $label-color;
+}
+
+.thank-you {
+    font-weight: 600;
+    color: $accent;
+    font-size: 13px;
 }
 
 .sign {
     text-align: right;
-    margin-top: 40px;
-    font-weight: bold;
+    margin: 6px 16px 0 16px;
+    font-weight: 700;
+    font-size: 13px;
+    color: $accent;
 }
 
 @media print {
     #bill-print {
         display: block !important;
     }
-}
 
-.bill-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.bill-table th,
-.bill-table td {
-    border: 1px solid #000;
-    padding: 5px;
-    text-align: left;
-}
-
-.bill-table th {
-    background-color: #f2f2f2;
-}
-.bill-table td {
-    font-size: 13px;
+    .bill-container {
+        box-shadow: none;
+        border: 1px solid #ccc;
+        margin: 0 auto;
+    }
 }

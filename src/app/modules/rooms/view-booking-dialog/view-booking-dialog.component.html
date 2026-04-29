@@ -89,12 +89,12 @@
                 <div class="two-cols">
                     <div class="view-field">
                         <span class="label">Check-in</span>
-                        <span class="value">{{( bookingDetails?.checkinDts | date: 'dd-MM-yyyy') || '-' }}</span>
+                        <span class="value">{{( bookingDetails?.checkinDts | date: 'dd-MM-yyyy hh:mm a') || '-' }}</span>
                     </div>
 
                     <div class="view-field">
                         <span class="label">Check-out</span>
-                        <span class="value">{{ (bookingDetails?.checkoutDts | date: 'dd-MM-yyyy') || '-' }}</span>
+                        <span class="value">{{ (bookingDetails?.checkoutDts | date: 'dd-MM-yyyy hh:mm a') || '-' }}</span>
                     </div>
                 </div>
 

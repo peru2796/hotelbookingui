@@ -1,0 +1,74 @@
+<div class="dialog-header">
+    <div>
+        <h3>Add Payment</h3>
+    </div>
+
+    <button mat-icon-button (click)="close()">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+
+<div class="dialog-body">
+
+    <div class="two-cols">
+        <div class="view-field">
+            <span class="label">Name</span>
+            <span class="value">{{ data?.firstName }} {{ data?.lastName }}</span>
+        </div>
+
+        <div class="view-field">
+            <span class="label">Room Number</span>
+            <span class="value">{{ data?.roomNumber }}</span>
+        </div>
+    </div>
+    <div class="two-cols">
+        <div class="view-field">
+            <span class="label">Total Amount</span>
+            <span class="value">{{ data?.totalAmount | currency:'INR'}}</span>
+        </div>
+        <div class="view-field">
+            <span class="label">Amount Paid</span>
+            <span class="value">{{ data?.amountPaid | currency:'INR'}}</span>
+        </div>
+    </div>
+    <div class="two-cols full">
+        <div *ngIf="data?.miscellaneousCharge > 0" class="view-field">
+            <span class="label">Order Amount</span>
+            <span class="order-icon" style="margin-top: -10px;">{{data?.miscellaneousCharge | currency:'INR'}} <mat-icon
+                    (click)="openOrdersDialog()">info</mat-icon></span>
+        </div>
+        <div class="view-field">
+            <span class="label">Remaining Amount</span>
+            <span class="value" [ngClass]="{'warning-text': data?.totalAmount !== data?.amountPaid}">
+                {{
+                (data?.amountRemaining ?? 0) | currency:'INR'
+                }}</span>
+        </div>
+    </div>
+
+    <div class="two-cols full">
+        <div class="view-field">
+            <span class="label">Paying Amount</span>
+            <mat-form-field appearance="outline">
+                <input matInput type="number" [(ngModel)]="amountPaid" name="amountPaid"
+                    min="0" [max]="totalRemaining">
+                <mat-error *ngIf="amountPaid > totalRemaining">
+                    Cannot exceed {{ totalRemaining | currency:'INR' }}
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div class="view-field mar-top-15">
+            <span class="label">Balance Due After Checkout</span>
+            <span class="value" [ngClass]="{'warning-text': balanceAfterPayment > 0}">
+                {{ balanceAfterPayment | currency:'INR' }}
+            </span>
+        </div>
+    </div>
+    
+</div>
+<div class="dialog-footer">
+    <button mat-button (click)="close()">Cancel</button>
+    <button [ngClass]="{'disabled-btn': amountPaid > data?.amountRemaining  }"  class="custom-btn btn-secondary mar-lft-10" (click)="addPayment()">
+        Add Payment
+    </button>
+</div>

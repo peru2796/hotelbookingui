@@ -29,7 +29,17 @@
             <mat-datepicker #toPicker></mat-datepicker>
         </mat-form-field>
 
-        <button mat-raised-button color="primary" (click)="loadReport()" [disabled]="!reportType && !fromDate && !toDate">
+         <!-- Report Type -->
+        <mat-form-field appearance="outline">
+            <mat-label>Invoice Type</mat-label>
+            <mat-select [(ngModel)]="gstType">
+                <mat-option value="3">All</mat-option>
+                <mat-option value="1">GST</mat-option>
+                <mat-option value="2">Non GST</mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" (click)="loadReport()" [disabled]="!reportType && !fromDate && !toDate && !gstType">
             Generate
         </button>
 
@@ -49,8 +59,8 @@
     <div id="print-section" class="table-wrapper mat-elevation-z2">
 
         <div class="print">
-            <h3 class="hotel-name">Sri Sudharsana Residency</h3>
-            <p class="hotel-address">6/1, 8/1, South Car Street, Sankarankovil - 627 756</p>
+            <h3 class="hotel-name"><strong> Sudharsana Residency</strong></h3>
+            <p class="hotel-address"><strong>6/1, 8/1, South Car Street, Sankarankovil - 627 756</strong></p>
         </div>
 
         <h3 class="print-title no-print">{{ reportTitle }}</h3>
@@ -67,7 +77,7 @@
                         <th>Customer Name (GSTIN NO)</th>
                         <th>Room No</th>
                         <th>Base Price</th>
-                        <th class="width-8">GST</th>
+                        <th class="width-8">CGST</th>
                         <th class="width-8">SGST</th>
                         <th>Total Amount</th>
                     </tr>

@@ -24,12 +24,12 @@
     <div class="two-cols">
         <div class="view-field">
             <span class="label">Checkin Date</span>
-            <span class="value">{{ data?.checkinDts | date: 'dd-MM-yyyy' }}</span>
+            <span class="value">{{ data?.checkinDts | date: 'dd-MM-yyyy hh:mm a' }}</span>
         </div>
 
         <div class="view-field">
             <span class="label">Checkout Date</span>
-            <span class="value">{{ data?.checkoutDts | date: 'dd-MM-yyyy' }}</span>
+            <span class="value">{{ data?.checkoutDts | date: 'dd-MM-yyyy hh:mm a' }}</span>
         </div>
     </div>
     <div class="two-cols">
@@ -57,17 +57,51 @@
         </div>
     </div>
 
+    <div class="two-cols full">
+        <div class="view-field">
+            <span class="label">Paying Amount</span>
+            <mat-form-field appearance="outline">
+                <input matInput type="number" [(ngModel)]="amountPaid" name="amountPaid"
+                    min="0" [max]="totalRemaining">
+                <mat-error *ngIf="amountPaid > totalRemaining">
+                    Cannot exceed {{ totalRemaining | currency:'INR' }}
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div class="view-field mar-top-15">
+            <span class="label">Balance Due After Checkout</span>
+            <span class="value" [ngClass]="{'warning-text': balanceAfterPayment > 0}">
+                {{ balanceAfterPayment | currency:'INR' }}
+            </span>
+        </div>
+    </div>
+
+    <div class="two-cols full">
+        <div class="view-field">
+            <span class="label">Discount Amount</span>
+            <mat-form-field appearance="outline">
+                <input matInput type="number" [(ngModel)]="discountAmount" name="discountAmount">
+            </mat-form-field>
+        </div>
+        <div class="view-field">
+            <span class="value" style="margin-top: 18px;">
+                <div class="form-options">
+                    <mat-checkbox [(ngModel)]="gstEnabled">GST Enabled</mat-checkbox>
+                </div>
+            </span>
+        </div>
+    </div>
 </div>
 <div class="dialog-footer">
     <button mat-button (click)="close()">Cancel</button>
-    <button class="custom-btn btn-secondary mar-lft-10" (click)="checkout()">
+    <button [ngClass]="{'disabled-btn': amountPaid > ((data?.amountRemaining) + (data?.miscellaneousCharge)) }" class="custom-btn btn-secondary mar-lft-10" (click)="checkout()">
         Checkout
     </button>
 </div>
 
 
 <ng-template #ordersDialog let-dialogRef="dialogRef">
-    <h2 class="mar-btm-1 pad-lft-20 pad-btm-1 pad-top-10">Order Charges</h2>
+    <h2 class="custom-header mar-btm-1 pad-lft-20 pad-btm-10 pad-top-10">Order Summary</h2>
 
     <mat-dialog-content class="pad-top-10 pad-btm-8">
         <div>

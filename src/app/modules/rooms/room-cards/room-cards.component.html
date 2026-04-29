@@ -43,15 +43,26 @@
         <div class="room-header" [ngClass]="getStatusClass(room.statusName)">
             <div>
                 <small>{{ room.floorName }}</small>
-                <h2>Room {{ room.roomNumber }}</h2>
+                <h2>Room {{ room.roomNumber }}
+                    <mat-icon [matTooltip]="'Edit'" *ngIf="room.statusName === 'Checked-in'" class="edit-icon"
+                        (click)="editRoom(room)">
+                        edit
+                    </mat-icon>
+                </h2>
                 <div class="people-details">
                     <mat-icon matSuffix>bed</mat-icon> {{ room.roomTypeName }}
+                    <span *ngIf="room?.miscellaneousCharge" (click)="viewOrders(room)">
+                        <mat-icon class="view-orders-icon" [matTooltip]="'Order Summary'"
+                            matSuffix>visibility</mat-icon>
+                    </span>
                 </div>
             </div>
+
             <span class="status-badge" [ngClass]="getStatusClass(room.statusName)">
                 {{ room.statusName }}
             </span>
         </div>
+
 
         <div class="room-footer">
             <button class="custom-btn btn-primary" *ngIf="room.statusName === 'Available'" (click)="addGuest(room)">

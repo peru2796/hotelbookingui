@@ -27,6 +27,7 @@ export class AddBookingDialogComponent {
 
 
   isDragging = false;
+  isSaving = false;
   selectedFile!: File;
   previewUrl: string | ArrayBuffer | null = null;
 
@@ -41,6 +42,9 @@ export class AddBookingDialogComponent {
   }
 
   saveBooking() {
+    if (this.isSaving) return;
+    this.isSaving = true;
+
     const formData = new FormData();
 
     if (this.selectedFile) {
@@ -59,10 +63,12 @@ export class AddBookingDialogComponent {
           this.dialogRef.close(true);
         } else {
           this.toastr.error('Booking failed', 'Error');
+          this.isSaving = false;
         }
       },
       error: (err) => {
         console.error('Booking failed', err);
+        this.isSaving = false;
 
         if (err.status === 400) {
           this.toastr.warning('Invalid booking data', 'Warning');

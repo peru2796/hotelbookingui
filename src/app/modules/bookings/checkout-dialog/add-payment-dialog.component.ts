@@ -1,14 +1,14 @@
 import { Component, Inject, TemplateRef, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { RoomsRepository } from '../rooms-repository';
 import { ToastrService } from 'ngx-toastr';
+import { RoomsRepository } from '../../rooms/rooms-repository';
 
 @Component({
-  selector: 'app-checkout-dialog',
-  templateUrl: './checkout-dialog.component.html',
-  styleUrls: ['./checkout-dialog.component.scss']
+  selector: 'app-add-payment-dialog',
+  templateUrl: './add-payment-dialog.component.html',
+  styleUrls: ['./add-payment-dialog.component.scss']
 })
-export class CheckoutDialogComponent {
+export class AddPaymentDialogComponent {
   amount: any;
   discountAmount: any = 0;
   gstEnabled: boolean = true;
@@ -18,7 +18,7 @@ export class CheckoutDialogComponent {
   loading: boolean = false;
   orderDetails: any;
   constructor(
-    private dialogRef: MatDialogRef<CheckoutDialogComponent>,
+    private dialogRef: MatDialogRef<AddPaymentDialogComponent>,
     private repository: RoomsRepository,
     private dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: any, private toastr: ToastrService
@@ -29,7 +29,7 @@ export class CheckoutDialogComponent {
   }
 
   get totalRemaining(): number {
-    return (this.data?.amountRemaining ?? 0) + (this.data?.miscellaneousCharge ?? 0);
+    return (this.data?.amountRemaining ?? 0);
   }
 
   get balanceAfterPayment(): number {
@@ -37,18 +37,12 @@ export class CheckoutDialogComponent {
   }
 
   onPayingAmountChange() {
-    /* if (this.amountPaid > this.totalRemaining) {
+    if (this.amountPaid > this.totalRemaining) {
       this.amountPaid = this.totalRemaining;
     }
     if (this.amountPaid < 0) {
       this.amountPaid = 0;
-    } */
-  }
-
-  get isOverPaid(): boolean {
-    const remaining = (this.data?.amountRemaining ?? 0);
-    const misc = (this.data?.miscellaneousCharge ?? 0);
-    return this.amountPaid > (remaining + misc);
+    }
   }
 
   // ── Formats Date to yyyy-MM-ddTHH:mm:ss.mmm ───────────────────────────────
@@ -63,7 +57,7 @@ export class CheckoutDialogComponent {
     return `${yyyy}-${mm}-${dd}T${hh}:${min}:${ss}.${ms}`;
   }
 
-  checkout() {
+  addPayment() {
     // ── Set current date & time as actual checkout time ────────────────────
     const now = new Date();
     this.data.checkoutDts = this.formatLocalDateTime(now);
@@ -76,20 +70,18 @@ export class CheckoutDialogComponent {
     }
 
     // ── Apply partial or full payment ──────────────────────────────────────
-    this.data.amountPaid      = (this.data?.amountPaid ?? 0) + paying;
-    this.data.amountRemaining = this.totalRemaining - paying;
-    this.data.discountAmount  = this.discountAmount;
-    this.data.gstEnabled      = this.gstEnabled;
+    this.data.amountPaid      = paying;
+    this.data.amountRemaining = this.totalRemaining;
     this.repository
-      .getCheckOut(this.data.bookingId, this.data)
+      .addPayment(this.data.bookingId, this.data)
       .subscribe({
         next: (data) => {
           if (data?.status === 'Success') {
-            this.toastr.success('Checkout successfully', 'Success');
+            this.toastr.success('Payment added successfully', 'Success');
             this.dialogRef.close(true);
           } else {
             this.toastr.error(
-              data?.message || 'Checkout failed',
+              data?.message || 'Failed to add payment',
               'Error'
             );
           }

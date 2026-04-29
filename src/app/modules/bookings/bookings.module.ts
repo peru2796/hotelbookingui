@@ -8,13 +8,15 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AddBookingDialogComponent } from './add-booking-dialog/add-booking-dialog.component';
 import { BookingsRepository } from './bookings-repository';
 import { BillPrintComponent } from './bill-print/bill-print.component';
+import { AddPaymentDialogComponent } from './checkout-dialog/add-payment-dialog.component';
 
 
 @NgModule({
   declarations: [
     BookingsComponent,
     AddBookingDialogComponent,
-    BillPrintComponent
+    BillPrintComponent,
+    AddPaymentDialogComponent
   ],
   imports: [
     CommonModule,

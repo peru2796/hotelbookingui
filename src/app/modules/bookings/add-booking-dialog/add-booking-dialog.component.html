@@ -85,7 +85,7 @@
 
 <div class="action-btn" mat-dialog-actions align="end">
     <button mat-stroked-button (click)="close()">Cancel</button>
-    <button mat-raised-button color="primary" (click)="saveBooking()" [disabled]="bookingForm.invalid">Save</button>
+    <button mat-raised-button color="primary" (click)="saveBooking()" [disabled]="bookingForm.invalid || isSaving">Save</button>
 </div>
 
 

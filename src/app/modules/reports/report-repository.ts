@@ -13,13 +13,14 @@ export class ReportRepository {
 
     constructor(private http: HttpClient) { }
 
-    getBillingDetails(fromDate: any, toDate: any): Observable<any> {
+    getBillingDetails(fromDate: any, toDate: any, gstType:any): Observable<any> {
         const from = this.formatDateTime(fromDate, 0, 0, 0);
         const to = this.formatDateTime(toDate, 23, 59, 0);
 
         const headers = new HttpHeaders()
             .set('fromDate', from)
             .set('toDate', to)
+            .set('gstType', gstType)
         return this.http.get<any[]>(`${this.baseUrl}/getGstBillingReport`, { headers });
     }
 

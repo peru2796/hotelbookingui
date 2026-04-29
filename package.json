@@ -1,12 +1,66 @@
 {
   "name": "hotel-dashboard",
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "main": "main.js",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --proxy-config proxy.conf.json --port 4300",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "electron": "ng build --base-href ./ && electron .",
+    "electron:dev": "electron .",
+    "electron:build": "ng build --configuration production && electron-builder",
+    "electron:build:win": "ng build --configuration production && electron-builder --win",
+    "electron:build:mac": "ng build --configuration production && electron-builder --mac",
+    "electron:build:linux": "ng build --configuration production && electron-builder --linux",
+    "electron:debug": "electron --inspect=5858 .",
+    "electron:debug-brk": "electron --inspect-brk=5858 ."
+  },
+  "build": {
+    "appId": "com.srisudharsana.hoteldashboard",
+    "productName": "HotelDashboard",
+    "copyright": "Sri Sudharsana Residency",
+    "icon": "assets/icon",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "main.js",
+      "assets/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
+      ],
+      "icon": "assets/icon.ico"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "assets/icon.icns"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "assets/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "assets/icon.ico",
+      "uninstallerIcon": "assets/icon.ico",
+      "installerHeaderIcon": "assets/icon.ico",
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "HotelDashboard"
+    }
   },
   "private": true,
   "dependencies": {
@@ -33,6 +87,9 @@
     "@angular/cli": "~16.0.3",
     "@angular/compiler-cli": "^16.0.0",
     "@types/jasmine": "~4.3.0",
+    "electron": "^41.0.2",
+    "electron-builder": "^26.8.1",
+    "electron-reload": "^2.0.0-alpha.1",
     "jasmine-core": "~4.6.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",

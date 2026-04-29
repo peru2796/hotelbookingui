@@ -178,7 +178,7 @@
     cursor: pointer;
     color: #474747;
     position: absolute;
-    right: 3px;
+    right: 30%;
     top: 10px;
     cursor: pointer;
     z-index: 1;
@@ -242,4 +242,86 @@
   justify-content: flex-end;
   align-items: center;
   padding-right: 20px;
+}
+
+.two-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.view-field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 12px;
+}
+
+.view-field .label {
+  font-size: 12px;
+  color: #777;
+}
+
+.view-field .value {
+  font-size: 15px;
+  font-weight: 500;
+  color: #000000;
+}
+/* Order Summary Table – fully isolated */
+.order-summary-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+/* All cells */
+.order-summary-table th,
+.order-summary-table td {
+  border: 1px solid #000;
+  padding: 8px;
+  text-align: left;
+  color: #000;
+}
+
+/* Header row (Order Name / Order Value) */
+.order-summary-table thead tr.table-header-1 th {
+  font-weight: 600;
+  background-color: #f5f5f5;
+}
+
+/* Body rows */
+.order-summary-table tbody tr td {
+  font-weight: 400;
+}
+
+/* Grand Total row */
+.order-summary-table tbody tr.table-header-1 td {
+  font-weight: 600;
+  background-color: #f5f5f5;
+}
+
+/* Optional: align value column to right */
+.order-summary-table th:nth-child(2),
+.order-summary-table td:nth-child(2) {
+  text-align: right;
+}
+
+/* Optional: subtle hover for rows */
+.order-summary-table tbody tr:not(.table-header-1):hover {
+  background-color: #fafafa;
+}
+
+.close-btn {
+  border: 1px solid #777;
+  background: #77777733;
+  padding: 6px 15px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  cursor: pointer;
+}
+.order-icon .mat-icon {
+  font-size: 18px;
+  cursor: pointer;
+  position: relative;
+  top: 10px;
+  left: 2px;
 }

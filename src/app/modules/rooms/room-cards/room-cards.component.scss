@@ -202,3 +202,14 @@
 :host ::ng-deep .room-input .mat-mdc-select-value-text {
     font-size: 14px;
 }
+.edit-icon {
+    position: relative;
+    top: 9px;
+    cursor: pointer;
+    left: 5px;
+    font-size: 18px;
+}
+.view-orders-icon{
+    color: #3f51b5;
+    cursor: pointer;
+}

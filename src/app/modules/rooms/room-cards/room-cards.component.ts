@@ -7,6 +7,7 @@ import { RoomsRepository } from '../rooms-repository';
 import { CheckoutDialogComponent } from '../checkout-dialog/checkout-dialog.component';
 import { BillPrintComponent } from '../../bookings/bill-print/bill-print.component';
 import { ToastrService } from 'ngx-toastr';
+import { OrderSummaryComponent } from '../order-summary/order-summary.component';
 
 
 @Component({
@@ -65,6 +66,7 @@ export class RoomCardsComponent {
   }
 
   addGuest(item: any) {
+    item.checkinDate = this.selectedDate;
     const dialogRef = this.dialog.open(RoomBookingDialogComponent, {
       width: '950px',
       data: {
@@ -236,5 +238,35 @@ export class RoomCardsComponent {
   goToday() {
     this.selectedDate = new Date(this.minDate);
     this.applyDateFilter();
+  }
+  editRoom(room: any) {
+     const dialogRef = this.dialog.open(RoomBookingDialogComponent, {
+      width: '950px',
+      data: {
+        mode: 'edit',
+        data: room
+      }
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.fetchRoomDetails(); // refresh table
+      }
+    });
+  }
+  viewOrders(room: any) {
+     const dialogRef = this.dialog.open(OrderSummaryComponent, {
+      width: '500px',
+      data: {
+        mode: 'booking',
+        data: room
+      }
+    });
+
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result) {
+        this.fetchRoomDetails();
+      }
+    });
   }
 }

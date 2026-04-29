@@ -10,6 +10,8 @@ import { AuthModule } from './auth/auth.module';
 import { ToastrModule } from 'ngx-toastr';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './core/interceptors/auth.interceptor';
+import { MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { MY_DATE_FORMATS } from './shared/date-format';
 
 
 @NgModule({
@@ -35,7 +37,9 @@ import { AuthInterceptor } from './core/interceptors/auth.interceptor';
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
       multi: true
-    }
+    },
+    { provide: MAT_DATE_LOCALE, useValue: 'en-GB' }, // 🔥 REQUIRED
+    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS }
   ],
   bootstrap: [AppComponent]
 })

@@ -47,9 +47,21 @@ export class RoomsRepository {
         return this.http.post(`${this.baseUrl}/checkout`, payload);
     }
 
+    addPayment(id: string, payload: any): Observable<any> {
+        return this.http.post(`${this.baseUrl}/addPayment`, payload);
+    }
+
     getBillingDetails(id: string): Observable<any> {
         const headers = new HttpHeaders({ id: id });
         return this.http.get(`${this.baseUrl}/getBillingDetailsById`, { headers });
+    }
+
+    getRoomTypes(): Observable<any> {
+        return this.http.get(`${this.baseUrl}/getRoomTypeList`);
+    }
+
+    getStateList(): Observable<any> {
+        return this.http.get(`${this.baseUrl}/getStateList`);
     }
 
     saveOrders(payload: any): Observable<any> {
@@ -59,6 +71,11 @@ export class RoomsRepository {
     getRoomService(bookingId: string): Observable<any> {
         const headers = new HttpHeaders({ 'bookingId': bookingId });
         return this.http.get(`${this.baseUrl}/getRoomServiceOrders`, { headers });
+    }
+
+    getClientByMobile(mobile: string): Observable<any> {
+        const headers = new HttpHeaders({ 'mobileNumber': mobile });
+        return this.http.get(`${this.baseUrl}/getClientByMobileNumber`, { headers });
     }
 
 }

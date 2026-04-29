@@ -10,6 +10,7 @@ import { ReportRepository } from '../report-repository';
 export class GstReportComponent {
 
   reportType: 'monthly' | 'quarterly' | 'yearly' | null = null;
+  gstType: '3' | '2' | '1' | null = '1';
   fromDate!: Date | null;
   toDate!: Date | null;
   grandTotals = {
@@ -21,7 +22,7 @@ export class GstReportComponent {
   reportData: any;
   constructor(private datePipe: DatePipe, private titleCasePipe: TitleCasePipe, private repo: ReportRepository) { }
   loadReport() {
-    this.repo.getBillingDetails(this.fromDate, this.toDate).subscribe((data: any) => {
+    this.repo.getBillingDetails(this.fromDate, this.toDate, this.gstType).subscribe((data: any) => {
       this.reportData = data;
     });
   }
@@ -30,6 +31,7 @@ export class GstReportComponent {
     this.reportType = null;
     this.fromDate = null;
     this.toDate = null;
+    this.gstType = null;
     this.reportData = [];
   }
 
@@ -130,7 +132,7 @@ export class GstReportComponent {
             .hotel-name {
                 text-align: center;
                 font-size: 24px;
-                color: #e32913;
+                color: #000;
                 margin: 0;
             }
 

@@ -1,0 +1,32 @@
+<h2 class="custom-header mar-btm-1 pad-lft-20 pad-btm-10 pad-top-10">Order Summary</h2>
+
+<mat-dialog-content class="pad-top-10 pad-btm-8">
+    <div>
+        <table cellpadding="8">
+            <thead>
+                <tr class="table-header">
+                    <th>Order Name</th>
+                    <th>Order Value</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let order of orderDetails">
+                    <td>{{ order.orderName }}</td>
+                    <td>{{ order.orderValue }}</td>
+                </tr>
+
+                <!-- Grand Total Row -->
+                <tr class="table-header">
+                    <td>Grand Total</td>
+                    <td>{{ grandTotal }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" class="mar-rgt-18">
+    <button class="close-btn" color="btn-secondary" (click)="close()">Close</button>
+</mat-dialog-actions>

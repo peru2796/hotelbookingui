@@ -4,22 +4,23 @@
     <div class="bill-container">
 
         <div class="bill-header">
-            <div>
+            <div class="header-para">
                 <p><strong>GSTIN</strong>: 33ACKFS7564HZZP</p>
                 <p><strong>Ph</strong> : 04636 222 220</p>
+                <p><strong>Cell</strong> : 9443322591</p>
             </div>
-
+            <div class="title">
+                <h2><strong>Sri Sudharsana Residency</strong></h2>
+                <h3><strong>Boarding & Lodging</strong></h3>
+                <p><strong>Address: 6/1, 8/1, South Car Street, Sankarankovil - 627 756</strong></p>
+            </div>  
             <div class="right">
                 <span class="cash-bill">CASH BILL</span>
-                <p>Subject to Sankarankovil <br> Jurisdiction</p>
+                <p style="margin-top:5px;line-height: 18px;">Subject to Sankarankovil <br> Jurisdiction</p>
             </div>
         </div>
 
-        <div class="title">
-            <h2>Sri Sudharsana Residency</h2>
-            <h3>Boarding & Lodging</h3>
-            <p>6/1, 8/1, South Car Street, Sankarankovil - 627 756</p>
-        </div>
+
 
 
         <hr />
@@ -40,16 +41,16 @@
                         titlecase }}</p>
                 </div>
                 <div class="right">
-                    <p><strong>No. of Days Stayed:</strong> {{numberOfDayes}} days</p>
+                    <p><strong>No. of Days Stayed:</strong> {{billData?.noOfDaysSpend}} days</p>
                 </div>
             </div>
 
             <div class="info-row">
                 <div class="left">
-                    <p><strong>Checkin Date:</strong> {{ billData?.checkinDts | date : 'dd-MM-yyyy' }}</p>
+                    <p><strong>Checkin Date:</strong> {{ billData?.checkinDts | date : 'dd-MM-yyyy hh:mm a' }}</p>
                 </div>
                 <div class="right">
-                    <p><strong>Checkin Out:</strong> {{ billData?.checkoutDts | date : 'dd-MM-yyyy' }}</p>
+                    <p><strong>Checkin Out:</strong> {{ billData?.checkoutDts | date : 'dd-MM-yyyy hh:mm a' }}</p>
                 </div>
             </div>
 
@@ -58,7 +59,7 @@
                     <p><strong>Room No:</strong> {{ billData?.roomNumber }}</p>
                 </div>
                 <div class="right">
-                    <p><strong>Rate/day:</strong> {{billData?.roomType === 1 ? 1500 : 1300 }} </p>
+                    <p><strong>Rate/day:</strong>  {{ billData?.totalAmount - billData?.miscellaneousCharge / (billData?.noOfDaysSpend || 1) | number:'1.2-2' }} </p>
                 </div>
             </div>
 
@@ -74,7 +75,7 @@
             <thead>
                 <tr>
                     <th>Description</th>
-                    <th style="text-align:right">Amount</th>
+                    <th style="text-align:right">Amount(₹)</th>
                 </tr>
             </thead>
             <tbody>
@@ -83,25 +84,55 @@
                     <td class="right-align">{{ billData?.baseFare | number:'1.2-2' }}</td>
                 </tr>
                 <tr>
-                    <td>CGST</td>
+                    <td>CGST (2.5%)</td>
                     <td class="right-align">{{ billData?.cgst ? billData?.cgst : 0 | number:'1.2-2' }}</td>
                 </tr>
                 <tr>
-                    <td>SGST</td>
+                    <td>SGST (2.5%)</td>
                     <td class="right-align">{{ billData?.sgst ? billData?.sgst : 0 | number:'1.2-2' }}</td>
                 </tr>
                 <tr>
                     <td>Miscellaneous Charge</td>
-                    <td class="right-align">{{ billData?.miscellaneousCharge ? billData?.miscellaneousCharge : 0 | number:'1.2-2' }}</td>
+                    <td class="right-align">{{ billData?.miscellaneousCharge ? billData?.miscellaneousCharge : 0 |
+                        number:'1.2-2' }}</td>
                 </tr>
             </tbody>
         </table>
 
-        <div class="totals">
-            <!-- <p><strong>Advance:</strong> {{ billData?.amountPaid }}</p> -->
-            <p><strong>Total:</strong> {{ billData?.totalAmount }}</p>
-            <p><strong>Balance:</strong> {{ billData?.amountRemaining }}</p>
-        </div>
+        <table class="totals-table">
+            <tr>
+                <td>
+                    <div class="totals-columns">
+                        <div>
+                            <span>Paid Amount</span>
+                        </div>
+                        <div>
+                            {{ (billData?.amountPaid || 0) | number:'1.2-2' }}
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="totals-columns">
+                        <div>
+                            <span>Balance Amount</span>
+                        </div>
+                        <div>
+                            {{ (billData?.amountRemaining || 0) | number:'1.2-2' }}
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="totals-columns">
+                        <div>
+                            <span>Grand Total</span>
+                        </div>
+                        <div>
+                            {{ (billData?.totalAmount || 0) | number:'1.2-2' }}
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
 
         <p class="words">
             <strong>Amount in words:</strong> {{ billData?.totalAmountInWords | titlecase }} Rupees

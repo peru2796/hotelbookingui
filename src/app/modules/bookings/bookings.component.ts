@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit, Input, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, Input, EventEmitter, Output, TemplateRef } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -12,6 +12,9 @@ import { MatMenuTrigger } from '@angular/material/menu';
 import { ViewBookingDialogComponent } from '../rooms/view-booking-dialog/view-booking-dialog.component';
 import { BillPrintComponent } from './bill-print/bill-print.component';
 import { CheckoutDialogComponent } from '../rooms/checkout-dialog/checkout-dialog.component';
+import { RoomsRepository } from '../rooms/rooms-repository';
+import { ToastrService } from 'ngx-toastr';
+import { AddPaymentDialogComponent } from './checkout-dialog/add-payment-dialog.component';
 
 
 @Component({
@@ -26,6 +29,7 @@ export class BookingsComponent implements OnInit, AfterViewInit {
     'name',
     'mobileNumber',
     'room',
+    'roomTypeName',
     'checkinDts',
     'checkoutDts',
     'billingNumber',
@@ -48,8 +52,16 @@ export class BookingsComponent implements OnInit, AfterViewInit {
 
   billData: any;
   today = new Date();
-  isBillPrint = false
-  constructor(private dialog: MatDialog, private bookingRepo: BookingsRepository) { }
+  isBillPrint = false;
+
+  @ViewChild('ordersDialog') ordersDialog!: TemplateRef<any>;
+  @ViewChild('orderSummaryDialog') orderSummaryDialog!: TemplateRef<any>;
+  ordersDialogRef: any;
+  orderName: string | undefined;
+  orderValue: string | undefined;
+  roomDetails: any;
+  orderDetails: any;
+  constructor(private dialog: MatDialog, private bookingRepo: BookingsRepository, private repository: RoomsRepository, private toastr: ToastrService) { }
 
   ngOnInit() {
     this.setDefaultOneMonthFilter();
@@ -139,18 +151,18 @@ export class BookingsComponent implements OnInit, AfterViewInit {
   }
 
   checkOut(data: any) {
-      const dialogRef = this.dialog.open(CheckoutDialogComponent, {
-        width: '600px',
-        data: data
-      });
-      dialogRef.afterClosed().subscribe(result => {
-        if (result === true) {
-          this.billPrintPage?.printBill(data?.bookingId);
-          this.loadClients()
-        }
-      });
-    }
-    
+    const dialogRef = this.dialog.open(CheckoutDialogComponent, {
+      width: '600px',
+      data: data
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === true) {
+        this.billPrintPage?.printBill(data?.bookingId);
+        this.loadClients()
+      }
+    });
+  }
+
   viewClient(row: any) {
     console.log('View:', row);
   }
@@ -171,6 +183,17 @@ export class BookingsComponent implements OnInit, AfterViewInit {
     });
   }
 
+  addPayment(row: any){
+    const dialogRef = this.dialog.open(AddPaymentDialogComponent, {
+      width: '600px',
+      data: row
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === true) {
+        this.loadClients()
+      }
+    });
+  }
 
   deleteClient(row: any) {
     if (confirm('Are you sure you want to delete?')) {
@@ -179,11 +202,8 @@ export class BookingsComponent implements OnInit, AfterViewInit {
   }
 
   getPaymentStatus(row: any): string {
-    const total = Number(row.totalAmount) || 0;
-    const paid = Number(row.amountPaid) || 0;
-    if (paid === 0) return 'Unpaid';
-    if (paid < total) return 'Unpaid';
-    return 'Paid';
+    const remaining = Number(row.amountRemaining) || 0;
+    return remaining > 0 ? 'Unpaid' : 'Paid';
   }
 
   view(data: any) {
@@ -219,5 +239,73 @@ export class BookingsComponent implements OnInit, AfterViewInit {
   resetFilters() {
     this.setDefaultOneMonthFilter();
     this.loadClients();
+  }
+
+  addExtraItems(event: any) {
+    this.roomDetails = event
+    this.ordersDialogRef = this.dialog.open(this.ordersDialog, {
+      width: '400px',
+      panelClass: 'custom-upload-modalbox',
+    });
+    this.ordersDialogRef.afterClosed().subscribe(() => {
+      this.orderName = '';
+      this.orderValue = '';
+    });
+  }
+
+  saveOrders(event: any) {
+    const payload = {
+      "id": 0,
+      "bookingId": this.roomDetails.bookingId,
+      "orderName": this.orderName,
+      "orderValue": this.orderValue,
+      "status": 0
+    }
+    this.repository.saveOrders(payload).subscribe({
+      next: (data) => {
+        if (data?.status === 'Success') {
+          this.toastr.success('Order saved successfully', 'Success');
+          this.ordersDialogRef.close(true);
+          this.loadClients();
+          this.orderName = '';
+          this.orderValue = '';
+        } else {
+          this.toastr.error(
+            data?.message || 'Order saved failed',
+            'Error'
+          );
+        }
+      },
+      error: (err) => {
+        this.toastr.error(
+          err?.error?.message || 'Something went wrong. Please try again.',
+          'Error'
+        );
+      }
+    });
+  }
+
+  openOrdersDialog(data: any) {
+    this.getOrders(data);
+    this.ordersDialogRef = this.dialog.open(this.orderSummaryDialog, {
+      width: '500px',
+      panelClass: 'custom-upload-modalbox',
+    });
+  }
+
+  getOrders(data:any) {
+    this.repository.getRoomService(data.bookingId).subscribe({
+      next: (res) => {
+        this.orderDetails = res;
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    });
+  }
+
+  get grandTotal(): number {
+    return this.orderDetails
+      ?.reduce((sum: any, item: { orderValue: any; }) => sum + item.orderValue, 0);
   }
 }

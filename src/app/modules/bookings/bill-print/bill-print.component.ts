@@ -46,7 +46,7 @@ export class BillPrintComponent implements OnInit {
         const diffTime = checkout.getTime() - checkin.getTime();
         const diffDays = diffTime / (1000 * 60 * 60 * 24);
 
-        return Math.max(diffDays, 0) ==0? 1 : Math.max(diffDays, 0);
+        return Math.max(diffDays, 0) == 0 ? 1 : Math.max(diffDays, 0);
     }
 
 
@@ -59,14 +59,17 @@ export class BillPrintComponent implements OnInit {
         popup!.document.write(`
     <html>
         <head>
-            <title>Cash Bill</title>
-
+        
             <style>
+             @page {
+            margin: 0;   /* ← This removes about:blank and timestamp */
+            size: A4;
+          }
                 .bill-container {
                     font-family: Arial;
-                    width: 210mm;
+                    width: 200mm;
                     /* A4 width */
-                margin: 0 auto;
+                margin: 0;
             }
 
             .bill-header {
@@ -85,8 +88,8 @@ export class BillPrintComponent implements OnInit {
 
             .cash-bill {
                 margin: 0;
-                background: #e32913;
-                color: #fff;
+             
+                color: #000;
                 padding: 5px 5px;
                 display: inline-block;
                 border-radius: 4px;
@@ -98,10 +101,9 @@ export class BillPrintComponent implements OnInit {
 
             .title {
                 text-align: center;
-                margin-top: -45px;
 
                 h2 {
-                    color: #e32913;
+                    color: #000;
                     font-size: 24px;
                     font-weight: 500;
                     margin: 0;
@@ -110,14 +112,18 @@ export class BillPrintComponent implements OnInit {
                 h3 {
                     font-size: 19px;
                     font-weight: 500;
-                    color: #4d4949;
+                    color: #000;
                     margin: 0;
                 }
 
                 p {
                     font-size: 12px;
                     margin: 0;
+                    color: #000;
                 }
+            }
+            .header-para p{
+                margin: 5px;
             }
 
             .bill-info-rows {
@@ -166,11 +172,23 @@ export class BillPrintComponent implements OnInit {
             .bill-table td {
                 padding: 6px 4px;
             }
-
-            .totals {
-                text-align: right;
+            .totals-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 10px;
             }
 
+            .totals-table td {
+                border: 1px solid #000;
+                padding: 8px;
+            }
+            .totals-columns{
+                display: flex;
+                justify-content: space-between;
+                span{
+                    font-weight: bold;
+                }
+            }
             .words {
                 border: 1px solid #000;
                 padding: 5px;

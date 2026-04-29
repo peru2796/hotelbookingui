@@ -76,6 +76,12 @@
                 <td mat-cell *matCellDef="let row">{{ row.roomNumber }}</td>
             </ng-container>
 
+            <!-- Room Type-->
+            <ng-container matColumnDef="roomTypeName">
+                <th mat-header-cell *matHeaderCellDef>Room Type</th>
+                <td mat-cell *matCellDef="let row">{{ row.roomTypeName }}</td>
+            </ng-container>
+
             <!-- Checkin -->
             <ng-container matColumnDef="checkinDts">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Check In</th>
@@ -127,22 +133,30 @@
                             <mat-icon>visibility</mat-icon>
                             <span>View</span>
                         </button>
-
-                        <button *ngIf="!isViewOnly && row.statusName === 'Checked-in'" mat-menu-item (click)="checkOut(row)">
+                        <button *ngIf="getPaymentStatus(row) === 'Unpaid' && row.billingNumber" mat-menu-item (click)="addPayment(row)">
+                            <mat-icon>edit</mat-icon>
+                            <span>Add Payment</span>
+                        </button>
+                        <button *ngIf="!isViewOnly && row.statusName === 'Checked-in'" mat-menu-item (click)="editClient(row)">
+                            <mat-icon>edit</mat-icon>
+                            <span>Edit</span>
+                        </button>
+                        <button *ngIf="!isViewOnly && row.statusName === 'Checked-in'" mat-menu-item
+                            (click)="checkOut(row)">
                             <mat-icon>logout</mat-icon>
                             <span>Check Out</span>
                         </button>
-                        <!-- <button *ngIf="isViewOnly" mat-menu-item (click)="editClient(row)">
-                            <mat-icon>edit</mat-icon>
-                            <span>Edit</span>
-                        </button> -->
-
                         <button *ngIf="getPaymentStatus(row) === 'Paid' && row.billingNumber" mat-menu-item
                             (click)="onPrintClick(row)">
                             <mat-icon>print</mat-icon>
                             <span>Print</span>
                         </button>
-
+                        <button mat-menu-item *ngIf="row.statusName === 'Checked-in'" (click)="addExtraItems(row)">
+                            <mat-icon matSuffix>add</mat-icon> Orders
+                        </button>
+                        <button mat-menu-item *ngIf="row.miscellaneousCharge" (click)="openOrdersDialog(row)">
+                            <mat-icon matSuffix>visibility</mat-icon> Order Summary
+                        </button>
                     </mat-menu>
                 </td>
             </ng-container>
@@ -159,3 +173,77 @@
 </div>
 
 <app-bill-print #billPrintPage class="hidden-for-screen"></app-bill-print>
+
+<ng-template #ordersDialog let-dialogRef="dialogRef">
+    <h2 mat-dialog-title>Guest Orders</h2>
+
+    <mat-dialog-content>
+        <div>
+            <div class="two-cols">
+                <div class="view-field">
+                    <span class="label">First Name</span>
+                    <span class="value">{{ roomDetails?.firstName }} {{ roomDetails?.lastName }}</span>
+                </div>
+
+                <div class="view-field">
+                    <span class="label">Room Number</span>
+                    <span class="value">{{ roomDetails?.roomNumber }}</span>
+                </div>
+            </div>
+            <div class="two-cols mar-top-10">
+                <mat-form-field appearance="outline">
+                    <mat-label>Item</mat-label>
+                    <input matInput [(ngModel)]="orderName" name="orderName" />
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Value</mat-label>
+                    <input matInput [(ngModel)]="orderValue" name="orderValue" />
+                </mat-form-field>
+            </div>
+        </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+        <button mat-stroked-button (click)="dialogRef.close()">Cancel</button>
+        <button mat-raised-button color="primary" [disabled]="!orderName || !orderValue"
+            (click)="saveOrders(dialogRef)">
+            Save
+        </button>
+    </mat-dialog-actions>
+</ng-template>
+
+<ng-template #orderSummaryDialog let-dialogRef="dialogRef">
+    <h2 class="custom-header mar-btm-1 pad-lft-20 pad-btm-10 pad-top-10">Order Summary</h2>
+
+    <mat-dialog-content class="pad-top-10 pad-btm-8">
+        <div class="order-summary">
+            <table class="order-summary-table" cellpadding="8">
+                <thead>
+                    <tr class="table-header-1">
+                        <th>Order Name</th>
+                        <th>Order Value</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr *ngFor="let order of orderDetails">
+                        <td>{{ order.orderName }}</td>
+                        <td>{{ order.orderValue }}</td>
+                    </tr>
+
+                    <!-- Grand Total Row -->
+                    <tr class="table-header-1">
+                        <td>Grand Total</td>
+                        <td>{{ grandTotal }}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end" class="mar-rgt-18">
+        <button class="close-btn" color="btn-secondary" (click)="dialogRef.close()">Close</button>
+    </mat-dialog-actions>
+</ng-template>

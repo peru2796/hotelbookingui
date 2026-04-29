@@ -4,10 +4,13 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { RouterModule } from '@angular/router';
 import { MaterialCollectionModule } from './material-collection.module';
+import { MY_DATE_FORMATS } from './date-format';
+import { MAT_DATE_FORMATS } from '@angular/material/core';
+
 @NgModule({
   declarations: [
     SidebarComponent,
-    NavbarComponent,
+    NavbarComponent
   ],
   imports: [
     CommonModule,
@@ -17,6 +20,9 @@ import { MaterialCollectionModule } from './material-collection.module';
   exports: [
     SidebarComponent,
     NavbarComponent
+  ],
+  providers: [
+    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS }
   ]
 })
 export class SharedModule { }
